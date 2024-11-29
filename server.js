@@ -121,7 +121,7 @@ setInterval(fetchYouTubeData, 300000); // 300,000 ms = 5 minutes
 fetchYouTubeData(); // Initial fetch
 
 // Endpoint for Wemos to fetch YouTube stats
-app.get('/youtube-stats', (req, res) => {
+app.get('/api/youtube-stats', (req, res) => {
   console.log(youtubeData);
   res.json(youtubeData);
 });
