@@ -8,33 +8,62 @@ const PORT = 5000;
 
 let youtubeData = {
   name: "Risto Innovates",
-  subscribers: 0,
-  views: 0,
-  videoCount: 0,
+  subscribers: 2200,
+  views: 150000,
+  videoCount: 35,
   latestVideo: {
-    title: '',
-    views: 0,
-    comments: 0
-  },
-  unrespondedComments: 0
+    title: 'How to use a diglypuff',
+    views: 123000,
+    comments: 5230
+  }
 };
 
-// Set up OAuth2 client
-const oauth2Client = new google.auth.OAuth2(
-  process.env.YOUTUBE_CLIENT_ID,
-  process.env.YOUTUBE_CLIENT_SECRET,
-  process.env.REDIRECT_URI
-);
+let instagramData = {
+  name: "Risto Innovates",
+  subscribers: 89,
+  views: 1230,
+  videoCount: 42,
+  latestVideo: {
+    title: 'How to build pedals',
+    views: 2100,
+    comments: 30
+  }
+};
 
-// Initial credentials if you already have the refresh token
-if (process.env.YOUTUBE_REFRESH_TOKEN) {
-  oauth2Client.setCredentials({ refresh_token: process.env.YOUTUBE_REFRESH_TOKEN });
+let tiktokData = {
+  name: "Risto Innovates",
+  subscribers: 2560,
+  views: 200340,
+  videoCount: 43,
+  latestVideo: {
+    title: 'Buildo pedalo',
+    views: 234,
+    comments: 23
+  }
+};
+
+let finalData = {
+  youtubeData,
+  instagramData,
+  tiktokData
 }
 
-const youtube = google.youtube({
-  version: 'v3',
-  auth: oauth2Client,
-});
+// // Set up OAuth2 client
+// const oauth2Client = new google.auth.OAuth2(
+//   process.env.YOUTUBE_CLIENT_ID,
+//   process.env.YOUTUBE_CLIENT_SECRET,
+//   process.env.REDIRECT_URI
+// );
+
+// // Initial credentials if you already have the refresh token
+// if (process.env.YOUTUBE_REFRESH_TOKEN) {
+//   oauth2Client.setCredentials({ refresh_token: process.env.YOUTUBE_REFRESH_TOKEN });
+// }
+
+// const youtube = google.youtube({
+//   version: 'v3',
+//   auth: oauth2Client,
+// });
 
 // Route to start the authorization flow
 app.get('/auth', (req, res) => {
@@ -76,7 +105,7 @@ async function fetchYouTubeData() {
       id: process.env.CHANNEL_ID,
     });
     const stats = channelResponse.data.items[0].statistics;
-    
+
     youtubeData.subscribers = stats.subscriberCount;
     youtubeData.views = stats.viewCount;
     youtubeData.videoCount = stats.videoCount;
@@ -117,13 +146,13 @@ function calculateUnrespondedComments(videoId) {
 }
 
 // Schedule to fetch YouTube stats every 5 minutes
-setInterval(fetchYouTubeData, 300000); // 300,000 ms = 5 minutes
-fetchYouTubeData(); // Initial fetch
+// setInterval(fetchYouTubeData, 300000); // 300,000 ms = 5 minutes
+// fetchYouTubeData(); // Initial fetch
 
 // Endpoint for Wemos to fetch YouTube stats
 app.get('/api/youtube-stats', (req, res) => {
   console.log(youtubeData);
-  res.json(youtubeData);
+  res.json(finalData);
 });
 
 app.listen(PORT, () => {
